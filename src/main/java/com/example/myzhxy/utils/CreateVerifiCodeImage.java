@@ -14,7 +14,9 @@ public class CreateVerifiCodeImage {
     private static int WIDTH = 90;
     private static int HEIGHT = 35;
     private static int FONT_SIZE = 20;
+//    验证码
     private static char[] verifiCode;
+//    验证码图片
     private static BufferedImage verifiCodeImage;
 
     /**
@@ -28,6 +30,7 @@ public class CreateVerifiCodeImage {
         Graphics graphics = verifiCodeImage.getGraphics();
         verifiCode = generateCheckCode();
         drawBackground(graphics);
+        drawRands(graphics,verifiCode);
         graphics.dispose();
         return verifiCodeImage;
     }
@@ -38,7 +41,7 @@ public class CreateVerifiCodeImage {
      * @Param: no
      * @Return: char[]
      */
-    private static char[] getVerifiCode() {
+    public static char[] getVerifiCode() {
         return verifiCode;
     }
 
