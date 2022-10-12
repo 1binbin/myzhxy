@@ -1,14 +1,12 @@
 package com.example.myzhxy.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.myzhxy.mapper.AdminMapper;
 import com.example.myzhxy.pojo.Admin;
 import com.example.myzhxy.pojo.LoginForm;
 import com.example.myzhxy.service.AdminService;
 import com.example.myzhxy.utils.MD5;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
