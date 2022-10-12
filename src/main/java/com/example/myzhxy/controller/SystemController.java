@@ -10,6 +10,7 @@ import com.example.myzhxy.service.TeacherService;
 import com.example.myzhxy.utils.CreateVerifiCodeImage;
 import com.example.myzhxy.utils.JwtHelper;
 import com.example.myzhxy.utils.Result;
+import com.example.myzhxy.utils.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -45,6 +47,7 @@ public class SystemController {
      * @Param: LoginForm loginForm 接收请求体数据
      * @Return: Result<LoginForm>
      */
+    // TODO: 2022/10/12 校验登录是否成功
     @PostMapping("/login")
     public Result login(@RequestBody LoginForm loginForm, HttpServletRequest request) {
 //        验证码校验
@@ -54,7 +57,7 @@ public class SystemController {
         if ("".equals(formVerifiCode) || null == formVerifiCode) {
             return Result.fail().message("验证码失效，请刷新后重试");
         }
-        if (!verifiCode.equals(formVerifiCode)) {
+        if (!verifiCode.equalsIgnoreCase(formVerifiCode)) {
             return Result.fail().message("验证码有误，请重新输入");
         }
 //        从session域对象中移除这个验证码
@@ -112,6 +115,45 @@ public class SystemController {
             default:
                 return Result.fail().message("查无此用户");
         }
+    }
+
+    /** 登录成功响应数据
+     * @Param:
+     * @Return:
+     */
+    // TODO: 2022/10/12 登录成功响应数据
+    @GetMapping("/getInfo")
+    public Result getInfoByToken(@RequestHeader("token") String token){
+//        验证token是否过期
+        boolean expiration = JwtHelper.isExpiration(token);
+        if (expiration) {
+            return Result.build(null, ResultCodeEnum.TOKEN_ERROR);
+        }
+//        解析出用户名和用户类型
+        Long userId = JwtHelper.getUserId(token);
+        Integer userType = JwtHelper.getUserType(token);
+//        根据不同的用户类型跳转
+        Map<String ,Object> map= new LinkedHashMap<>();
+        switch (userType){
+            case 1:
+//                获取用户信息
+                Admin admin = adminService.getAdminById(userId);
+                map.put("userType",1);
+                map.put("user",admin);
+                break;
+            case 2:
+                Student student = studentService.getStudentById(userId);
+                map.put("userType",2);
+                map.put("user",student);
+                break;
+            case 3:
+                Teacher teacher = teacherService.getTeacherById(userId);
+                map.put("userType",3);
+                map.put("user",teacher);
+                break;
+            default:
+        }
+        return Result.ok(map);
     }
 
     /**

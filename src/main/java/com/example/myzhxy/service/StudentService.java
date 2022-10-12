@@ -10,4 +10,6 @@ import com.example.myzhxy.pojo.Student;
  */
 public interface StudentService extends IService<Student> {
     Student login(LoginForm loginForm);
+
+    Student getStudentById(Long userId);
 }
