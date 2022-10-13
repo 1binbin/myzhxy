@@ -11,8 +11,13 @@ import com.example.myzhxy.utils.CreateVerifiCodeImage;
 import com.example.myzhxy.utils.JwtHelper;
 import com.example.myzhxy.utils.Result;
 import com.example.myzhxy.utils.ResultCodeEnum;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.service.Tags;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -20,10 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 对于非表格操作的控制层
@@ -31,6 +35,7 @@ import java.util.Map;
  * @Author hongxiaobin
  * @Time 2022/10/11-20:54
  */
+@Api(tags = "系统控制器")
 @RestController
 @RequestMapping("/sms/system")
 public class SystemController {
@@ -48,8 +53,9 @@ public class SystemController {
      * @Return: Result<LoginForm>
      */
     // TODO: 2022/10/12 校验登录是否成功
+    @ApiOperation("校验登录是否成功")
     @PostMapping("/login")
-    public Result login(@RequestBody LoginForm loginForm, HttpServletRequest request) {
+    public Result login(@ApiParam("JSON格式的表单信息") @RequestBody LoginForm loginForm, HttpServletRequest request) {
 //        验证码校验
         HttpSession session = request.getSession();
         String verifiCode = (String) session.getAttribute("verifiCode");
@@ -117,13 +123,16 @@ public class SystemController {
         }
     }
 
-    /** 登录成功响应数据
+    /**
+     * 登录成功响应数据
+     *
      * @Param:
      * @Return:
      */
     // TODO: 2022/10/12 登录成功响应数据
+    @ApiOperation("登录成功响应数据")
     @GetMapping("/getInfo")
-    public Result getInfoByToken(@RequestHeader("token") String token){
+    public Result getInfoByToken(@ApiParam("token数据") @RequestHeader("token") String token) {
 //        验证token是否过期
         boolean expiration = JwtHelper.isExpiration(token);
         if (expiration) {
@@ -133,23 +142,23 @@ public class SystemController {
         Long userId = JwtHelper.getUserId(token);
         Integer userType = JwtHelper.getUserType(token);
 //        根据不同的用户类型跳转
-        Map<String ,Object> map= new LinkedHashMap<>();
-        switch (userType){
+        Map<String, Object> map = new LinkedHashMap<>();
+        switch (userType) {
             case 1:
 //                获取用户信息
                 Admin admin = adminService.getAdminById(userId);
-                map.put("userType",1);
-                map.put("user",admin);
+                map.put("userType", 1);
+                map.put("user", admin);
                 break;
             case 2:
                 Student student = studentService.getStudentById(userId);
-                map.put("userType",2);
-                map.put("user",student);
+                map.put("userType", 2);
+                map.put("user", student);
                 break;
             case 3:
                 Teacher teacher = teacherService.getTeacherById(userId);
-                map.put("userType",3);
-                map.put("user",teacher);
+                map.put("userType", 3);
+                map.put("user", teacher);
                 break;
             default:
         }
@@ -163,6 +172,7 @@ public class SystemController {
      * @Return:
      */
     // TODO: 2022/10/11 获取验证码图片
+    @ApiOperation("获取验证码图片")
     @GetMapping("/getVerifiCodeImage")
     public void getVerifiCodeImage(HttpServletRequest request, HttpServletResponse response) {
 //        获取图片
@@ -179,5 +189,33 @@ public class SystemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 文件上传统一入口
+     *
+     * @Param:
+     * @Return:
+     */
+    @ApiOperation("文件上传统一入口")
+    @PostMapping("/headerImgUpload")
+    public Result headerImgUpload(@ApiParam("头像文件") @RequestPart("multipartFile") MultipartFile multipartFile,
+                                  HttpServletRequest request) {
+        String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        String originalFilename = multipartFile.getOriginalFilename();
+        assert originalFilename != null;
+        int i = originalFilename.lastIndexOf(".");
+        String newFileName = uuid.concat(originalFilename.substring(i));
+//        保存文件 将文件发送到第三方或独立的图片服务器
+        String portraitPath = "E:\\Project_practice\\myzhxy\\target\\classes\\public\\upload\\".concat(newFileName);
+        try {
+            multipartFile.transferTo(new File(portraitPath));
+        } catch (IOException e) {
+            return Result.fail(e.getMessage());
+        }
+//        响应图片的路径
+        String path = "upload/".concat(newFileName);
+        return Result.ok(path);
     }
 }

@@ -22,8 +22,8 @@ import java.util.List;
 public class ClazzServiceImpl extends ServiceImpl<ClazzMapper, Clazz> implements ClazzService {
 
     /** 查询班级信息，带分页条件
-     * @Param:
-     * @Return:
+     * @Param: Page<Clazz> page, Clazz clazz
+     * @Return: IPage<Clazz>
      */
     @Override
     public IPage<Clazz> getClazzByOpr(Page<Clazz> page, Clazz clazz) {
@@ -31,7 +31,7 @@ public class ClazzServiceImpl extends ServiceImpl<ClazzMapper, Clazz> implements
         String gradeName = clazz.getGradeName();
         String name = clazz.getName();
         if (!StringUtils.isEmpty(gradeName)){
-            objectQueryWrapper.eq("grade_name",gradeName);
+            objectQueryWrapper.like("grade_name",gradeName);
         }
         if (!StringUtils.isEmpty(name)) {
             objectQueryWrapper.like("name",name);
@@ -42,8 +42,8 @@ public class ClazzServiceImpl extends ServiceImpl<ClazzMapper, Clazz> implements
     }
 
     /** 在教师管理中显示班级信息
-     * @Param:
-     * @Return:
+     * @Param: null
+     * @Return: List<Clazz>
      */
     @Override
     public List<Clazz> getClazz() {

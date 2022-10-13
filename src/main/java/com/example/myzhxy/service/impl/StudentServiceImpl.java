@@ -49,7 +49,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         String clazzName = student.getClazzName();
         String name = student.getName();
         if (!StringUtils.isEmpty(clazzName)) {
-            studentQueryWrapper.eq("clazz_name", clazzName);
+            studentQueryWrapper.like("clazz_name", clazzName);
         }
         if (!StringUtils.isEmpty(name)) {
             studentQueryWrapper.like("name", name);

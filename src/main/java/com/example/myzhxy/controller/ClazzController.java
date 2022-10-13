@@ -26,8 +26,8 @@ public class ClazzController {
     private ClazzService clazzService;
 
     /** 分页查询班级信息
-     * @Param:
-     * @Return:
+     * @Param: Integer pageNo , Integer pageSize , Clazz clazz
+     * @Return: Result
      */
     @ApiOperation("分页查询班级信息")
     @GetMapping("/getClazzsByOpr/{pageNo}/{pageSize}")
@@ -35,14 +35,14 @@ public class ClazzController {
                                  @ApiParam("页大小") @PathVariable("pageSize") Integer pageSize,
                                  @ApiParam("查询条件") Clazz clazz){
 //        设置分页信息
-        Page<Clazz> page = new Page<>();
+        Page<Clazz> page = new Page<>(pageNo,pageSize);
         IPage<Clazz> iPage = clazzService.getClazzByOpr(page,clazz);
         return Result.ok(iPage);
     }
 
     /** 添加与修改班级信息
-     * @Param:
-     * @Return:
+     * @Param: Clazz clazz
+     * @Return: Result
      */
     @ApiOperation("添加与修改班级信息")
     @PostMapping("/saveOrUpdateClazz")
@@ -52,8 +52,8 @@ public class ClazzController {
     }
 
     /** 删除与批量删除班级信息
-     * @Param:
-     * @Return:
+     * @Param: List<Integer> ids
+     * @Return: Result
      */
     @ApiOperation("删除与批量删除班级信息")
     @DeleteMapping("/deleteClazz")
@@ -63,8 +63,8 @@ public class ClazzController {
     }
 
     /** 教师管理中回显班级信息
-     * @Param:
-     * @Return:
+     * @Param: null
+     * @Return: Result
      */
     @ApiOperation("教师管理中回显班级信息")
     @GetMapping("/getClazzs")
