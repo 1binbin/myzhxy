@@ -29,9 +29,10 @@ public class TeacherController {
      * @Param:
      * @Return:
      */
+    @ApiOperation("分页查询教师信息")
     @GetMapping("/getTeachers/{pageNo}/{pageSize}")
-    public Result getTeachersByOpr(@PathVariable("pageNo") Integer pageNo,
-                                   @PathVariable("pageSize") Integer pageSize,
+    public Result getTeachersByOpr(@ApiParam("页码数") @PathVariable("pageNo") Integer pageNo,
+                                   @ApiParam("页大小") @PathVariable("pageSize") Integer pageSize,
                                    Teacher teacher){
         Page<Teacher> page = new Page<>(pageNo,pageSize);
         IPage<Teacher> iPage = teacherService.getTeachersByOpr(page,teacher);
@@ -55,7 +56,7 @@ public class TeacherController {
      */
     @ApiOperation("删除与批量删除教师信息")
     @DeleteMapping("/deleteTeacher")
-    public Result deleteTeachers(@ApiParam("要删除的所有grade的id的JSON集合") @RequestBody List<Integer> ids){
+    public Result deleteTeachers(@ApiParam("要删除的所有teacher的id的JSON集合") @RequestBody List<Integer> ids){
         teacherService.removeByIds(ids);
         return Result.ok();
     }
