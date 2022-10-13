@@ -218,4 +218,29 @@ public class SystemController {
         String path = "upload/".concat(newFileName);
         return Result.ok(path);
     }
+
+
+    /** 修改密码
+     * @Param:
+     * @Return:
+     */
+    @ApiOperation("修改密码")
+    @PostMapping("/updatePwd/{oldPwd}/{newPwd}")
+    public Result updatePwd(@RequestHeader("token") String token,
+                            @PathVariable("oldPwd") String oldPwd,
+                            @PathVariable("newPwd") String newPwd){
+//        校验token是否过期
+        if (JwtHelper.isExpiration(token)) {
+            return Result.fail().message("token失效，请重新登录");
+        }
+//        获取用户id和userType
+        Long userId = JwtHelper.getUserId(token);
+        Integer userType = JwtHelper.getUserType(token);
+   /*     switch (userType){
+            case 1:
+                adminService.getOne();
+                break;
+        }*/
+        return Result.ok();
+    }
 }
