@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
  * @Author hongxiaobin
  * @Time 2022/10/11-20:47
@@ -29,5 +31,10 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         queryWrapper.orderByDesc("id");
         queryWrapper.orderByAsc("name");
         return baseMapper.selectPage(page, queryWrapper);
+    }
+
+    @Override
+    public List<Grade> getGrades() {
+        return baseMapper.selectList(null);
     }
 }

@@ -64,13 +64,24 @@ public class GradeController {
     /**
      * 删除与批量删除业务
      *
-     * @Param:
-     * @Return:
+     * @Param: List<Integer> ids
+     * @Return: Result
      */
     @ApiOperation("删除Grade年级信息")
     @DeleteMapping("/deleteGrade")
     public Result deleteGrade(@ApiParam("要删除的所有grade的id的JSON集合") @RequestBody List<Integer> ids) {
         gradeService.removeByIds(ids);
         return Result.ok();
+    }
+
+    /** 班级管理中回显年级信息
+     * @Param:
+     * @Return:
+     */
+    @ApiOperation("班级管理回显年级信息")
+    @GetMapping("/getGrades")
+    public Result getGrades(){
+        List<Grade> listGrades = gradeService.getGrades();
+        return Result.ok(listGrades);
     }
 }
