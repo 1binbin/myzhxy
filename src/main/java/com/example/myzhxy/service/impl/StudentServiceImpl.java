@@ -58,4 +58,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         studentQueryWrapper.orderByAsc("name");
         return baseMapper.selectPage(studentPage, studentQueryWrapper);
     }
+
+    @Override
+    public Student getOnePwd(Long userId, String oldPwd) {
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("id",userId.intValue()).eq("password",oldPwd);
+        return baseMapper.selectOne(studentQueryWrapper);
+    }
 }

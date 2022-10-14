@@ -16,4 +16,6 @@ public interface StudentService extends IService<Student> {
     Student getStudentById(Long userId);
 
     IPage<Student> getStudentByOpr(Student student, Page<Student> studentPage);
+
+    Student getOnePwd(Long userId, String oldPwd);
 }

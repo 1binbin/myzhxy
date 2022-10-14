@@ -60,4 +60,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         queryWrapper.orderByAsc("name");
         return baseMapper.selectPage(page,queryWrapper);
     }
+
+    @Override
+    public Admin getOnePwd(Long userId, String oldPwd) {
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",userId.intValue()).eq("password",oldPwd);
+        return baseMapper.selectOne(queryWrapper);
+    }
 }

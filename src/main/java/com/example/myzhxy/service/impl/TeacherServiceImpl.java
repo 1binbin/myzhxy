@@ -62,5 +62,12 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         teacherQueryWrapper.orderByAsc("name");
         return baseMapper.selectPage(page,teacherQueryWrapper);
     }
+
+    @Override
+    public Teacher getOnePwd(Long userId, String oldPwd) {
+        QueryWrapper<Teacher> teacherQueryWrapper = new QueryWrapper<>();
+        teacherQueryWrapper.eq("id",userId.intValue()).eq("password",oldPwd);
+        return baseMapper.selectOne(teacherQueryWrapper);
+    }
 }
 

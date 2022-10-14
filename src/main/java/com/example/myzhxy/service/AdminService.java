@@ -16,4 +16,6 @@ public interface AdminService extends IService<Admin> {
     Admin getAdminById(Long userId);
 
     IPage<Admin> getAdminByOpr(Page<Admin> page, String adminName);
+
+    Admin getOnePwd(Long userId, String oldPwd);
 }

@@ -7,10 +7,7 @@ import com.example.myzhxy.pojo.Teacher;
 import com.example.myzhxy.service.AdminService;
 import com.example.myzhxy.service.StudentService;
 import com.example.myzhxy.service.TeacherService;
-import com.example.myzhxy.utils.CreateVerifiCodeImage;
-import com.example.myzhxy.utils.JwtHelper;
-import com.example.myzhxy.utils.Result;
-import com.example.myzhxy.utils.ResultCodeEnum;
+import com.example.myzhxy.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -220,7 +217,9 @@ public class SystemController {
     }
 
 
-    /** 修改密码
+    /**
+     * 修改密码
+     *
      * @Param:
      * @Return:
      */
@@ -228,7 +227,7 @@ public class SystemController {
     @PostMapping("/updatePwd/{oldPwd}/{newPwd}")
     public Result updatePwd(@RequestHeader("token") String token,
                             @PathVariable("oldPwd") String oldPwd,
-                            @PathVariable("newPwd") String newPwd){
+                            @PathVariable("newPwd") String newPwd) {
 //        校验token是否过期
         if (JwtHelper.isExpiration(token)) {
             return Result.fail().message("token失效，请重新登录");
@@ -236,11 +235,39 @@ public class SystemController {
 //        获取用户id和userType
         Long userId = JwtHelper.getUserId(token);
         Integer userType = JwtHelper.getUserType(token);
-   /*     switch (userType){
+        oldPwd = MD5.encrypt(oldPwd);
+        newPwd = MD5.encrypt(newPwd);
+        switch (userType) {
             case 1:
-                adminService.getOne();
+                Admin admin = adminService.getOnePwd(userId, oldPwd);
+                if (null != admin) {
+                    admin.setPassword(newPwd);
+                    adminService.saveOrUpdate(admin);
+                } else {
+                    return Result.fail().message("原密码输入有误！");
+                }
                 break;
-        }*/
+            case 2:
+                Student student = studentService.getOnePwd(userId, oldPwd);
+                if (null != student) {
+                    student.setPassword(newPwd);
+                    studentService.saveOrUpdate(student);
+                } else {
+                    return Result.fail().message("原密码输入有误！");
+                }
+                break;
+            case 3:
+                Teacher teacher = teacherService.getOnePwd(userId, oldPwd);
+                if (null != teacher) {
+                    teacher.setPassword(newPwd);
+                    teacherService.saveOrUpdate(teacher);
+                } else {
+                    return Result.fail().message("原密码输入有误！");
+                }
+                break;
+            default:
+                return Result.fail().message("系统出错！");
+        }
         return Result.ok();
     }
 }
