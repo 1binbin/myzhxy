@@ -1,6 +1,5 @@
 package com.example.myzhxy.utils;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -57,7 +56,6 @@ public class Result<T> {
      * @Return: Result<T>
      */
     public static <T> Result<T> ok(T data) {
-        Result<T> build = build(data);
         return build(data, ResultCodeEnum.SUCCESS);
     }
 
@@ -72,7 +70,6 @@ public class Result<T> {
      * @Return: Result<T>
      */
     public static <T> Result<T> fail(T data) {
-        Result<T> result = build(data);
         return build(data, ResultCodeEnum.FAIL);
     }
 

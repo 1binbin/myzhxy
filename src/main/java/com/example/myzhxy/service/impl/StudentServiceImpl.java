@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.myzhxy.mapper.StudentMapper;
-import com.example.myzhxy.pojo.Admin;
 import com.example.myzhxy.pojo.LoginForm;
 import com.example.myzhxy.pojo.Student;
 import com.example.myzhxy.service.StudentService;
@@ -62,7 +61,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public Student getOnePwd(Long userId, String oldPwd) {
         QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
-        studentQueryWrapper.eq("id",userId.intValue()).eq("password",oldPwd);
+        studentQueryWrapper.eq("id", userId.intValue()).eq("password", oldPwd);
         return baseMapper.selectOne(studentQueryWrapper);
     }
 }
