@@ -120,11 +120,4 @@ public class JwtHelper {
         }
         return refreshedToken;
     }
-
-    public static void main(String[] args) {
-        String token = JwtHelper.createToken(1L, 1);
-        System.out.println(token);
-        System.out.println(JwtHelper.getUserId(token));
-        System.out.println(JwtHelper.getUserName(token));
-    }
 }
