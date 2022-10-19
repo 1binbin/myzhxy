@@ -1,22 +1,21 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   profiles:
     active: db
-
-  #解决SpringBoot2.6.0与swagger冲突问题【原因是在springboot2.6.0中将SpringMVC 默认路径匹配策略从AntPathMatcher 更改为PathPatternParser，导致出错，解决办法是切换回原先的AntPathMatcher】
+ #Resolve the conflict issue between SpringBoot2.6.0 and Swagger [The reason is that the default path matching policy for SpringMVC was changed from AntPathMatcher to PathPatternParser in SpringBoot2.6.0, which caused an error. The solution is to switch back to the original AntPathMatcher]
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
   thymeleaf:
-    #模板的模式，支持 HTML, XML TEXT JAVASCRIPT
+    #Template mode, supporting HTML, XML TEXT JAVASCRIPT
     mode: HTML5
-    #编码 可不用配置
+    #Encoding does not require configuration
     encoding: UTF-8
-    #开发配置为false,避免修改模板还要重启服务器
+    #The development configuration is set to false, avoiding template modifications and restarting the server
     cache: false
-    #配置模板路径，默认是templates，可以不用配置
+    #Configure the template path. The default is templates, and configuration is not required
     prefix: classpath:/static/
 
   jackson:
@@ -24,13 +23,13 @@ spring:
     time-zone: GMT+8
 
   servlet:
-    #设置文件上传上限
+    #Set file upload limit
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
 
 mybatis-plus:
   configuration:
-    #添加日志支持
+    #Add log support
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:/mapper/**/*.xml
